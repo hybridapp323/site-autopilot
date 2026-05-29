@@ -1,0 +1,83 @@
+// AutoPilot CRM — Landing interactions
+
+// 1) Nav: solid/glass on scroll
+const nav = document.querySelector('.nav');
+const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 12);
+onScroll();
+window.addEventListener('scroll', onScroll, { passive: true });
+
+// 2) Pricing: monthly / annual toggle
+const PRICES = {
+  standard: {
+    mensal:  { amt: 'R$ 597,90', note: '', noia: 'R$ 297,00' },
+    anual:   { amt: 'R$ 418,53', note: 'R$ 5.022/ano · economize 30%', noia: 'R$ 207,90' },
+  },
+  max: {
+    mensal:  { amt: 'R$ 797,00', note: '', noia: 'R$ 497,00' },
+    anual:   { amt: 'R$ 557,90', note: 'R$ 6.694/ano · economize 30%', noia: 'R$ 347,90' },
+  },
+};
+
+let cycle = 'anual';
+function renderPrices() {
+  document.querySelectorAll('.plan').forEach((plan) => {
+    const key = plan.dataset.plan;
+    const p = PRICES[key][cycle];
+    plan.querySelector('[data-amt]').textContent = p.amt;
+    plan.querySelector('[data-note]').textContent = p.note;
+    const noia = plan.querySelector('[data-noia]');
+    if (noia) noia.textContent = p.noia + '/mês';
+  });
+  document.querySelectorAll('.price-toggle button').forEach((b) =>
+    b.classList.toggle('active', b.dataset.cycle === cycle)
+  );
+}
+document.querySelectorAll('.price-toggle button').forEach((b) => {
+  b.addEventListener('click', () => { cycle = b.dataset.cycle; renderPrices(); });
+});
+renderPrices();
+
+// 3) Reveal on scroll
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+// 4) Theme toggle (light / dark) with persistence
+const themeBtn = document.getElementById('theme-toggle');
+if (themeBtn) {
+  themeBtn.addEventListener('click', () => {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      try { localStorage.setItem('ap-theme', 'dark'); } catch (e) {}
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      try { localStorage.setItem('ap-theme', 'light'); } catch (e) {}
+    }
+  });
+}
+
+// 5) Mobile nav toggle
+const toggle = document.querySelector('.nav-toggle');
+const links = document.querySelector('.nav-links');
+if (toggle) {
+  toggle.addEventListener('click', () => {
+    const open = links.style.display === 'flex';
+    links.style.display = open ? '' : 'flex';
+    links.style.position = 'absolute';
+    links.style.flexDirection = 'column';
+    links.style.top = '72px';
+    links.style.right = 'var(--gutter)';
+    links.style.background = 'hsl(var(--card))';
+    links.style.border = '1px solid hsl(var(--border))';
+    links.style.borderRadius = 'var(--radius)';
+    links.style.padding = '10px';
+    links.style.boxShadow = 'var(--shadow-lift)';
+  });
+  links.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => { if (window.innerWidth <= 900) links.style.display = ''; })
+  );
+}

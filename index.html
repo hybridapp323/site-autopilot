@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AutoPilot CRM — O CRM que funciona mesmo que o vendedor nunca abra</title>
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('ap-theme');
+      if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+    } catch (e) {}
+  })();
+</script>
+<link rel="stylesheet" href="landing.css" />
+</head>
+<body>
+<div class="page-bg"></div>
+
+<!-- ============================ NAV ============================ -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#top" aria-label="AutoPilot CRM">
+      <img src="assets/logo-autopilot.png" alt="" />
+      <span>Auto<b>Pilot</b></span>
+    </a>
+    <div class="nav-links">
+      <a href="#problema">O problema</a>
+      <a href="#como-funciona">Como funciona</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#planos">Planos</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <button class="theme-btn" id="theme-toggle" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
+      </button>
+      <a href="#planos" class="btn btn-ghost cta-secondary">Ver planos</a>
+      <a href="#cta" class="btn btn-primary">Agendar demo</a>
+      <button class="btn btn-ghost nav-toggle" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<header class="section hero container">
+  <div class="pill reveal">
+    <span class="tag">Pré-venda com IA</span>
+    <span>A IA atende, qualifica e apresenta o estoque — sozinha</span>
+  </div>
+  <h1 class="display reveal">
+    Seus vendedores não preenchem CRM.<br />
+    O AutoPilot <span class="accent-text">não precisa deles.</span>
+  </h1>
+  <p class="lead hero-sub reveal">
+    A IA atende, qualifica, apresenta o estoque e faz follow-up — tudo automático.
+    O vendedor só entra quando o lead já está pronto para comprar.
+  </p>
+  <div class="hero-actions reveal">
+    <a href="#cta" class="btn btn-primary btn-lg">
+      Quero ver o AutoPilot funcionando
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a href="#como-funciona" class="btn btn-ghost btn-lg">Ver como funciona</a>
+  </div>
+  <p class="hero-note reveal">Demo gratuita · 30 minutos · Sem compromisso</p>
+
+  <div class="hero-mock-wrap reveal">
+    <div class="mock">
+      <div class="mock-bar">
+        <div class="mock-dots"><i></i><i></i><i></i></div>
+        <div class="mock-url">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          app.autopilotcrm.com.br
+        </div>
+      </div>
+      <div class="mock-screen">
+        <div class="mock-placeholder">
+          <div class="ph-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg>
+          </div>
+          <div class="ph-label">Mockup do painel AutoPilot</div>
+          <div class="ph-sub">Imagem a definir</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== INTEGRATIONS / SOCIAL PROOF ===================== -->
+<section class="section-tight container">
+  <p class="marquee-head reveal">Integra com onde seus leads já estão</p>
+  <div class="logo-row reveal">
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+      Meta Ads
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      WhatsApp
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      Instagram
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      Facebook Messenger
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+      Webmotors
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M3 9v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9M3 9h18M9 13h6"/></svg>
+      OLX Autos
+    </span>
+    <span class="logo-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+      E-mail
+    </span>
+  </div>
+
+  <div class="trust-row reveal">
+    <span class="trust-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Atendimento em segundos — 24h por dia</span>
+    <span class="trust-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Pipeline que avança sozinho</span>
+    <span class="trust-item"><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Histórico completo sem o vendedor digitar nada</span>
+  </div>
+</section>
+
+<!-- ============================ PROBLEM ============================ -->
+<section class="section container" id="problema">
+  <div class="problem-grid">
+    <div class="problem-head">
+      <span class="eyebrow reveal">O problema</span>
+      <h2 class="h2 reveal" style="margin-top:18px;">
+        Você já contratou CRM antes. Não funcionou. E não foi culpa do time.
+      </h2>
+      <div class="problem-body reveal" style="margin-top:26px;">
+        <p>O problema é estrutural: <strong>vendedor de carro não preenche CRM.</strong> Ele atende pelo celular, no WhatsApp pessoal, às vezes até no Direct do Instagram.</p>
+        <p>O histórico do lead fica na cabeça dele — ou some quando ele sai da loja. Sem previsibilidade. Sem controle. Sem dados reais para tomar decisão.</p>
+        <p>E o mais frustrante: não é preguiça do time. É que a ferramenta foi projetada para quem senta no escritório — <strong>não para quem vende carro em pé no pátio.</strong></p>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="muted" style="font-size:14.5px; margin:0 0 14px;">Enquanto isso, o gestor fica no escuro:</p>
+      <div class="nobody-list">
+        <div class="nobody-item">
+          <span class="q">Lead chegou?</span>
+          <span class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Ninguém sabe</span>
+        </div>
+        <div class="nobody-item">
+          <span class="q">Lead está quente?</span>
+          <span class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Ninguém sabe</span>
+        </div>
+        <div class="nobody-item">
+          <span class="q">Por que a venda não fechou?</span>
+          <span class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>Ninguém sabe</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SOLUTION ============================ -->
+<section class="section container" id="solucao">
+  <div class="section-head center">
+    <span class="eyebrow reveal">A solução</span>
+    <h2 class="h2 reveal">O CRM que foi construído para funcionar sem o vendedor.</h2>
+    <p class="lead reveal">
+      Conecta o WhatsApp da loja (e o do vendedor, se quiser). A partir daí, o sistema trabalha sozinho —
+      responde, qualifica, apresenta o estoque e faz follow-up. Quando o lead está pronto, o vendedor recebe
+      um resumo completo no WhatsApp pessoal. Você abre o painel e, pela primeira vez, vê dados reais do seu comercial.
+    </p>
+  </div>
+
+  <div class="hero-mock-wrap reveal" style="margin-top:clamp(44px,6vw,72px);">
+    <div class="mock">
+      <div class="mock-bar">
+        <div class="mock-dots"><i></i><i></i><i></i></div>
+        <div class="mock-url">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          app.autopilotcrm.com.br/inbox
+        </div>
+      </div>
+      <div class="mock-screen">
+        <div class="mock-placeholder">
+          <div class="ph-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="ph-label">Mockup do Inbox omnichannel</div>
+          <div class="ph-sub">Imagem a definir</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== HOW IT WORKS ======================== -->
+<section class="section container" id="como-funciona">
+  <div class="section-head center">
+    <span class="eyebrow reveal">Como funciona</span>
+    <h2 class="h2 reveal">Simples para o vendedor. Poderoso para o gestor.</h2>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>Passo 01</div>
+      <h3 class="h3">Lead entra em contato</h3>
+      <p>Pelo WhatsApp, Instagram, Facebook, portais ou anúncio. A IA responde em segundos — de dia, de noite, no feriado.</p>
+      <p class="kicker">Nenhum lead fica sem resposta por demora.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg></span>Passo 02</div>
+      <h3 class="h3">IA qualifica e apresenta o estoque</h3>
+      <p>Coleta os dados do lead. Avalia poder de compra. Envia fotos e preços do seu estoque direto no chat. Se o lead sumiu, faz follow-up automático.</p>
+      <p class="kicker">O funil avança sozinho, sem o vendedor precisar fazer nada.</p>
+    </div>
+    <div class="step reveal">
+      <div class="step-num"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Passo 03</div>
+      <h3 class="h3">Vendedor entra quando vale a pena</h3>
+      <p>Lead qualificado? O vendedor recebe um resumo no próprio WhatsApp: nome, interesse, troca, forma de pagamento. Responde de lá. O CRM registra tudo.</p>
+      <p class="kicker">Vendedor fecha. Gestor enxerga. Sistema registra.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FEATURES ============================ -->
+<section class="section container" id="recursos">
+  <div class="section-head center">
+    <span class="eyebrow reveal">Recursos</span>
+    <h2 class="h2 reveal">Cada funcionalidade resolve um problema real da sua loja.</h2>
+  </div>
+
+  <!-- Feature 1 -->
+  <div class="feature-row">
+    <div class="feature-copy reveal">
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span>IA 24h</div>
+      <h3>Nenhum lead fica sem resposta</h3>
+      <p>Sua loja recebe lead às 23h de um domingo? A IA atende. Em segundos. Com a mesma qualidade de um atendente treinado.</p>
+      <div class="fnote">Atendimento automático via WhatsApp, Instagram, Facebook Messenger e portais de venda.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M15 13v2M9 13v2"/></svg></div><div class="ph-label">IA respondendo no chat</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 2 -->
+  <div class="feature-row flip">
+    <div class="feature-copy reveal">
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>Qualificação</div>
+      <h3>Vendedor só fala com quem está pronto para comprar</h3>
+      <p>A IA coleta nome, cidade, interesse no veículo, se tem troca e forma de pagamento — e ainda avalia o poder de compra do lead. Seu time só entra na conversa quando o terreno já está preparado.</p>
+      <div class="fnote">Sem SDR. Sem triagem manual. Só leads qualificados chegando para o vendedor.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="ph-label">Perfil qualificado do lead</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 3 -->
+  <div class="feature-row">
+    <div class="feature-copy reveal">
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>Follow-up</div>
+      <h3>Lead sumiu? O sistema vai atrás.</h3>
+      <p>Lead parou de responder? O AutoPilot retoma automaticamente no momento certo. Sem você precisar cobrar o vendedor. Sem lead esquecido no fundo do funil.</p>
+      <div class="fnote">Follow-ups automáticos configuráveis por estágio do pipeline.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div><div class="ph-label">Régua de follow-up automático</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 4 -->
+  <div class="feature-row flip">
+    <div class="feature-copy reveal">
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg></span>Estoque no chat</div>
+      <h3>O lead vê o carro sem sair do chat</h3>
+      <p>Fotos reais, quilometragem e preço — tudo enviado diretamente na conversa, em tempo real. A IA nunca inventa dado: só apresenta o que está no seu estoque.</p>
+      <div class="fnote">Integração com seu inventário. Lead vê, se interessa, e o vendedor fecha.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg></div><div class="ph-label">Veículo apresentado no WhatsApp</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 5 — Plano MAX -->
+  <div class="feature-row">
+    <div class="feature-copy reveal">
+      <span class="plan-badge"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 2 2.6 6.3L21 9l-5 4.3L17.5 21 12 17.3 6.5 21 8 13.3 3 9l6.4-.7z"/></svg>Plano MAX</span>
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></span>Modo shadow</div>
+      <h3>Zero mudança de rotina para o time. 100% de visibilidade para você.</h3>
+      <p>Quando um lead está qualificado, o vendedor recebe uma notificação no próprio WhatsApp com o resumo completo da conversa. Ele responde de lá — e o CRM captura tudo automaticamente.</p>
+      <div class="fnote">Cada mensagem do vendedor aparece no CRM. Histórico completo. Pipeline atualizado. Sem o vendedor abrir nenhuma plataforma.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div><div class="ph-label">Resumo do lead no WhatsApp do vendedor</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature 6 -->
+  <div class="feature-row flip">
+    <div class="feature-copy reveal">
+      <div class="ftag"><span class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>Dashboard</div>
+      <h3>Pela primeira vez, você sabe o que está acontecendo</h3>
+      <p>Quantos leads chegaram essa semana. Qual estágio cada um está. Taxa de conversão por vendedor. Tempo médio de resposta. Tudo em tempo real — sem depender que ninguém preencha nada.</p>
+      <div class="fnote">Dashboard completo. Dados reais. Previsibilidade de vendas.</div>
+    </div>
+    <div class="feature-mock reveal">
+      <div class="mock">
+        <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
+        <div class="mock-screen"><div class="mock-placeholder"><div class="ph-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><div class="ph-label">Dashboard de métricas em tempo real</div><div class="ph-sub">Imagem a definir</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PRICING ============================ -->
+<section class="section container" id="planos">
+  <div class="section-head center">
+    <span class="eyebrow reveal">Planos e preços</span>
+    <h2 class="h2 reveal">Escolha o plano para a realidade da sua loja</h2>
+    <p class="lead reveal">Setup único de R$ 500 no primeiro mês — inclui configuração, integração e treinamento.</p>
+    <div class="reveal">
+      <div class="price-toggle" role="tablist" aria-label="Ciclo de cobrança">
+        <button data-cycle="mensal" type="button">Mensal</button>
+        <button data-cycle="anual" class="active" type="button">Anual <span class="save">−30%</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="plans">
+    <!-- STANDARD -->
+    <div class="plan reveal" data-plan="standard">
+      <div class="plan-name">Standard</div>
+      <p class="plan-for">Para lojas que querem IA no atendimento pelo CRM.</p>
+      <div class="plan-price">
+        <span class="amt tabular" data-amt>R$ 418,53</span>
+        <span class="per">/mês · com IA</span>
+      </div>
+      <div class="plan-annual-note" data-note>R$ 5.022/ano · economize 30%</div>
+      <div class="plan-noia">
+        <span>Sem IA (apenas pipeline)</span>
+        <b><span data-noia>R$ 207,90/mês</span></b>
+      </div>
+      <a href="#cta" class="btn btn-ghost">Agendar demo gratuita</a>
+      <ul class="plan-feats">
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>1 número de WhatsApp conectado</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Até 10 usuários</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>IA de pré-venda completa (plano com IA)</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Pipeline automático, follow-up e estoque integrado</li>
+      </ul>
+    </div>
+
+    <!-- MAX -->
+    <div class="plan featured reveal" data-plan="max">
+      <span class="plan-flag"><svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 2 2.6 6.3L21 9l-5 4.3L17.5 21 12 17.3 6.5 21 8 13.3 3 9l6.4-.7z"/></svg>Mais popular</span>
+      <div class="plan-name">MAX</div>
+      <p class="plan-for">Para lojas onde o vendedor quer continuar usando o próprio WhatsApp.</p>
+      <div class="plan-price">
+        <span class="amt tabular" data-amt>R$ 557,90</span>
+        <span class="per">/mês · com IA</span>
+      </div>
+      <div class="plan-annual-note" data-note>R$ 6.694/ano · economize 30%</div>
+      <div class="plan-noia">
+        <span>Sem IA (apenas pipeline)</span>
+        <b><span data-noia>R$ 347,90/mês</span></b>
+      </div>
+      <a href="#cta" class="btn btn-primary">Quero agendar minha demo</a>
+      <ul class="plan-feats">
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Até 3 números de WhatsApp conectados</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Até 10 usuários</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>IA de pré-venda completa (plano com IA)</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Vendedor responde pelo WhatsApp pessoal</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>CRM registra tudo automaticamente (modo shadow)</li>
+        <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Notificação com resumo do lead no WhatsApp do vendedor</li>
+      </ul>
+    </div>
+  </div>
+  <p class="price-foot reveal">Sem fidelidade no plano mensal. Cancele quando quiser.</p>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section container" id="faq">
+  <div class="section-head center">
+    <span class="eyebrow reveal">FAQ</span>
+    <h2 class="h2 reveal">Perguntas de quem já tentou CRM antes</h2>
+  </div>
+  <div class="faq">
+    <details class="faq-item reveal">
+      <summary class="faq-q">Já contratei CRM antes e o time não usou.<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">Esse é exatamente o ponto. O AutoPilot foi construído para funcionar <em>sem</em> o time usar. A IA atende, o pipeline avança, o follow-up acontece — tudo sozinho. No Plano MAX, o vendedor nem precisa abrir o sistema. Ele continua no WhatsApp que já usa.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-q">Meu vendedor não vai querer aprender ferramenta nova.<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">No Plano MAX, ele não precisa aprender nada. Recebe uma notificação no WhatsApp com o resumo do lead e responde de lá. É isso. O CRM trabalha nos bastidores.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-q">Como a IA apresenta meu estoque?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">Você conecta seu inventário ao sistema. Quando o lead demonstra interesse em um modelo, a IA busca no seu estoque e envia fotos, km e preço direto no chat — sem inventar nada, sem dado desatualizado.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-q">E se o lead quiser falar com humano?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">O sistema transfere na hora, sem insistir. O vendedor recebe a notificação imediatamente com o contexto completo da conversa.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-q">Integra com os portais que eu uso?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">Sim. Meta Ads, Webmotors, OLX Autos, WhatsApp, Instagram, Facebook Messenger e e-mail — todos conectados.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-q">Tem contrato de fidelidade?<span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+      <div class="faq-a">No plano mensal, não. No plano anual, você paga adiantado e economiza 30%.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================ FINAL CTA ============================ -->
+<section class="section final" id="cta">
+  <div class="container">
+    <div class="final-card reveal">
+      <span class="eyebrow" style="justify-content:center;">Agende sua demo</span>
+      <h2 class="display" style="margin-top:20px;">Você sabe quantos leads sua loja perdeu essa semana?</h2>
+      <p class="lead">Agende uma demo gratuita de 30 minutos. A gente mostra o AutoPilot funcionando com a realidade da sua loja — antes de qualquer contrato.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn btn-primary btn-lg">
+          Agendar minha demo gratuita
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <p class="hero-note">Resposta em até 24h · Sem compromisso</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <a class="brand" href="#top"><img src="assets/logo-autopilot.png" alt="" /><span>Auto<b>Pilot</b></span></a>
+        <p class="footer-blurb">O CRM que funciona mesmo que o vendedor nunca abra. Construído para concessionárias e revendas.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#recursos">Recursos</a>
+          <a href="#planos">Planos</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer-col">
+          <h4>Integrações</h4>
+          <a href="#">WhatsApp</a>
+          <a href="#">Instagram &amp; Messenger</a>
+          <a href="#">Webmotors &amp; OLX Autos</a>
+          <a href="#">Meta Ads</a>
+        </div>
+        <div class="footer-col">
+          <h4>Empresa</h4>
+          <a href="#cta">Agendar demo</a>
+          <a href="#">Contato</a>
+          <a href="#">Termos</a>
+          <a href="#">Privacidade</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AutoPilot CRM · por Vision ADS</span>
+      <span class="tabular">Setup único de R$ 500 no primeiro mês</span>
+    </div>
+  </div>
+</footer>
+
+<script src="landing.js"></script>
+</body>
+</html>
