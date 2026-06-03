@@ -81,3 +81,42 @@ if (toggle) {
     a.addEventListener('click', () => { if (window.innerWidth <= 900) links.style.display = ''; })
   );
 }
+
+// 6) Calendly popup / badge widget
+const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
+const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
+
+function openCalendly(event) {
+  if (event) event.preventDefault();
+  if (window.location.protocol === 'file:') {
+    window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  if (window.Calendly?.initPopupWidget) {
+    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
+  } else {
+    window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
+  }
+}
+
+let calendlyBadgeInitialized = false;
+function initCalendlyBadge(attempt = 0) {
+  if (calendlyBadgeInitialized) return;
+  if (window.location.protocol === 'file:') return;
+  if (!window.Calendly?.initBadgeWidget) {
+    if (attempt < 40) window.setTimeout(() => initCalendlyBadge(attempt + 1), 250);
+    return;
+  }
+  calendlyBadgeInitialized = true;
+  window.Calendly.initBadgeWidget({
+    url: CALENDLY_URL,
+    text: 'Agende um horário comigo',
+    color: '#0069ff',
+    textColor: '#ffffff',
+    branding: true,
+  });
+}
+
+calendlyOpeners.forEach((trigger) => trigger.addEventListener('click', openCalendly));
+if (document.readyState === 'complete') initCalendlyBadge();
+else window.addEventListener('load', () => initCalendlyBadge());

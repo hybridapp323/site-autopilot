@@ -355,6 +355,14 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
     radial-gradient(600px 300px at 50% 0%, hsl(var(--primary) / 0.06), transparent 70%),
     repeating-linear-gradient(135deg, hsl(var(--foreground) / 0.015) 0 14px, transparent 14px 28px);
 }
+.mock-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: hsl(var(--background));
+}
 .mock-placeholder {
   display: flex; flex-direction: column; align-items: center; gap: 14px;
   color: hsl(var(--muted-foreground)); text-align: center; padding: 32px;
@@ -404,6 +412,7 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
 }
 .logo-chip:hover { border-color: hsl(var(--primary) / 0.5); color: hsl(var(--foreground)); background: hsl(var(--primary) / 0.06); }
 .logo-chip svg { width: 18px; height: 18px; opacity: 0.85; }
+.logo-chip img.logo-img { width: 18px; height: 18px; opacity: 0.85; display: inline-block; object-fit: contain; }
 
 .trust-row {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 32px;
