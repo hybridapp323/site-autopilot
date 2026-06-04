@@ -420,6 +420,9 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
 .logo-chip:hover { border-color: hsl(var(--primary) / 0.5); color: hsl(var(--foreground)); background: hsl(var(--primary) / 0.06); }
 .logo-chip svg { width: 18px; height: 18px; opacity: 0.85; }
 .logo-chip img.logo-img { width: 18px; height: 18px; opacity: 0.85; display: inline-block; object-fit: contain; }
+.logo-chip img.logo-wordmark { width: auto; height: 18px; max-width: 118px; }
+.logo-chip img.logo-webmotors { height: 17px; max-width: 108px; }
+.logo-chip img.logo-olx { height: 18px; max-width: 42px; }
 
 .trust-row {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 32px;
@@ -562,6 +565,35 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
   display: flex; justify-content: space-between; align-items: baseline;
 }
 .plan-noia b { color: hsl(var(--foreground) / 0.85); font-weight: 600; }
+.plan-consult {
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--primary) / 0.24);
+  background: linear-gradient(180deg, hsl(var(--primary) / 0.11), hsl(var(--foreground) / 0.025));
+}
+.plan-consult .consult-label {
+  display: inline-flex;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--accent-foreground));
+}
+.plan-consult strong {
+  display: block;
+  font-size: 19px;
+  line-height: 1.25;
+  color: hsl(var(--foreground) / 0.95);
+}
+.plan-consult p {
+  margin: 10px 0 0;
+  color: hsl(var(--foreground) / 0.68);
+  font-size: 14.5px;
+  line-height: 1.45;
+}
 .plan .btn { width: 100%; margin-top: 24px; }
 .plan-feats { list-style: none; margin: 24px 0 0; padding: 0; display: flex; flex-direction: column; gap: 13px; }
 .plan-feats li { display: flex; align-items: flex-start; gap: 11px; font-size: 14.5px; color: hsl(var(--foreground) / 0.82); line-height: 1.4; }

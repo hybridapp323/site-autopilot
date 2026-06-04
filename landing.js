@@ -22,9 +22,12 @@ let cycle = 'anual';
 function renderPrices() {
   document.querySelectorAll('.plan').forEach((plan) => {
     const key = plan.dataset.plan;
+    if (!PRICES[key]) return;
     const p = PRICES[key][cycle];
-    plan.querySelector('[data-amt]').textContent = p.amt;
-    plan.querySelector('[data-note]').textContent = p.note;
+    const amount = plan.querySelector('[data-amt]');
+    const note = plan.querySelector('[data-note]');
+    if (amount) amount.textContent = p.amt;
+    if (note) note.textContent = p.note;
     const noia = plan.querySelector('[data-noia]');
     if (noia) noia.textContent = p.noia + '/mês';
   });
