@@ -409,6 +409,8 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
   border: none;
   background: hsl(var(--background));
 }
+.showcase-desktop-only { display: none; }
+.showcase-mobile-only { display: block; }
 .mock-placeholder {
   display: flex; flex-direction: column; align-items: center; gap: 14px;
   color: hsl(var(--muted-foreground)); text-align: center; padding: 32px;
@@ -819,6 +821,8 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
   .hero { padding-top: 172px; }
   .hero-mock-wrap { margin-top: 64px; }
   .solution-demo { margin-top: 64px; }
+  .showcase-desktop-only { display: block; }
+  .showcase-mobile-only { display: none; }
   .hero-mock-wrap .mock { aspect-ratio: 16 / 9.4; }
   .hero-mock-wrap .mock-screen,
   .feature-mock .mock-screen { inset: 42px 0 0 0; }

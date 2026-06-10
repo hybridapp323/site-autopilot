@@ -97,6 +97,15 @@ if (toggle && links) {
 
 // 6) Preload demo videos after page load, then play only when the full mockup is visible
 const lazyVideos = document.querySelectorAll('video[data-src]');
+const showcaseMobileQuery = window.matchMedia('(max-width: 1023px)');
+
+function isShowcaseDeviceEnabled(showcase) {
+  const device = showcase.dataset.showcaseDevice;
+  if (device === 'mobile') return showcaseMobileQuery.matches;
+  if (device === 'desktop') return !showcaseMobileQuery.matches;
+  return true;
+}
+
 function ensureVideoPoster(video) {
   if (!video.poster || video.dataset.posterReady === 'true') return null;
   const screen = video.closest('.mock-screen');
@@ -118,6 +127,7 @@ function getVideoPoster(video) {
 }
 
 function prepareDemoVideo(video) {
+  if (!isShowcaseDeviceEnabled(video)) return;
   if (video.dataset.preparing === 'true' || video.dataset.prepared === 'true') return;
   video.dataset.preparing = 'true';
   ensureVideoPoster(video);
@@ -137,6 +147,10 @@ function prepareDemoVideo(video) {
 }
 
 function playDemoVideo(video) {
+  if (!isShowcaseDeviceEnabled(video)) {
+    resetDemoVideo(video);
+    return;
+  }
   if (video.dataset.visiblePlaying === 'true') return;
   video.dataset.visiblePlaying = 'true';
   video.dataset.activated = 'true';
@@ -183,7 +197,9 @@ function isDemoMockReadyToPlay(mock) {
 }
 
 function scheduleDemoVideoPreload() {
-  lazyVideos.forEach(prepareDemoVideo);
+  lazyVideos.forEach((video) => {
+    if (isShowcaseDeviceEnabled(video)) prepareDemoVideo(video);
+  });
 }
 
 if ('requestIdleCallback' in window) {
@@ -198,6 +214,10 @@ if ('IntersectionObserver' in window) {
     entries.forEach((entry) => {
       const video = videosByMock.get(entry.target);
       if (!video) return;
+      if (!isShowcaseDeviceEnabled(video)) {
+        resetDemoVideo(video);
+        return;
+      }
       if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
         playDemoVideo(video);
       } else {
@@ -239,6 +259,10 @@ function postIframeShowcaseCommand(iframe, command) {
 }
 
 function playIframeShowcase(iframe) {
+  if (!isShowcaseDeviceEnabled(iframe)) {
+    resetIframeShowcase(iframe, true);
+    return;
+  }
   if (iframeStates.get(iframe) === 'playing') return;
   iframeStates.set(iframe, 'playing');
   postIframeShowcaseCommand(iframe, 'autopilot:showcase-play');
@@ -251,6 +275,10 @@ function resetIframeShowcase(iframe, force = false) {
 }
 
 function syncIframeShowcase(mock, iframe) {
+  if (!isShowcaseDeviceEnabled(iframe)) {
+    resetIframeShowcase(iframe, true);
+    return;
+  }
   if (isDemoMockReadyToPlay(mock)) playIframeShowcase(iframe);
   else resetIframeShowcase(iframe);
 }
@@ -262,6 +290,10 @@ if ('IntersectionObserver' in window) {
     entries.forEach((entry) => {
       const iframe = iframesByMock.get(entry.target);
       if (!iframe) return;
+      if (!isShowcaseDeviceEnabled(iframe)) {
+        resetIframeShowcase(iframe, true);
+        return;
+      }
       if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
         playIframeShowcase(iframe);
       } else {
@@ -292,6 +324,20 @@ if ('IntersectionObserver' in window) {
 } else {
   iframeShowcases.forEach(playIframeShowcase);
 }
+
+function syncResponsiveShowcases() {
+  lazyVideos.forEach((video) => {
+    resetDemoVideo(video);
+    if (isShowcaseDeviceEnabled(video)) prepareDemoVideo(video);
+  });
+  iframeShowcases.forEach((iframe) => {
+    const mock = iframe.closest('.mock') || iframe;
+    resetIframeShowcase(iframe, true);
+    syncIframeShowcase(mock, iframe);
+  });
+}
+
+showcaseMobileQuery.addEventListener?.('change', syncResponsiveShowcases);
 
 // 8) Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
