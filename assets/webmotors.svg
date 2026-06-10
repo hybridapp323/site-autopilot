@@ -146,50 +146,8 @@
             </g>
         </g>
     </g>
-    <style>
-        #grid {
-            opacity: 0;
-            animation: showandhide 5s ease-out forwards infinite;
-        }
-        @keyframes showandhide {
-            0% {
-                opacity: 0
-            }
-            45% {
-                opacity: 0
-            }
-            50% {
-                opacity: 1
-            }
-            95% {
-                opacity: 1
-            }
-            100% {
-                opacity: 0
-            }
-        }
-        
-        #logo {
-            opacity: 1;
-            animation: showandhidelogo 5s ease-out forwards infinite;
-        }
-        @keyframes showandhidelogo {
-            0% {
-                opacity: 1
-            }
-            40% {
-                opacity: 1
-            }
-            45% {
-                opacity: 0
-            }
-            70% {
-                opacity: 0
-            }
-            100% {
-                opacity: 1
-            }
-        }
-
+        <style>
+        #grid { display: none; opacity: 0; animation: none; }
+        #logo { opacity: 1; animation: none; }
     </style>
 </svg>

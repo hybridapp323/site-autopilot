@@ -423,6 +423,9 @@ h1, h2, h3 { margin: 0; letter-spacing: var(--tracking-tight); line-height: 1.08
 .logo-chip img.logo-wordmark { width: auto; height: 18px; max-width: 118px; }
 .logo-chip img.logo-webmotors { height: 17px; max-width: 108px; }
 .logo-chip img.logo-olx { height: 18px; max-width: 42px; }
+.logo-chip img.logo-mobiauto { height: 18px; max-width: 128px; }
+.logo-chip img.logo-icarros { height: 18px; max-width: 92px; }
+.logo-chip img.logo-shopcar { height: 24px; max-width: 132px; }
 
 .trust-row {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 32px;
