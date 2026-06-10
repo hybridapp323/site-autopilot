@@ -4,7 +4,24 @@ function SeekHook() {
   const tl = useTimeline();
   React.useEffect(() => {
     window.__seek = (t) => { tl.setPlaying(false); tl.setTime(t); };
+    window.__reset = () => { tl.setPlaying(false); tl.setTime(0); };
     window.__play = () => tl.setPlaying(true);
+    window.__pause = () => tl.setPlaying(false);
+
+    const onMessage = (event) => {
+      if (event.data === 'autopilot:showcase-play') {
+        tl.setTime(0);
+        tl.setPlaying(true);
+      }
+      if (event.data === 'autopilot:showcase-reset') {
+        tl.setPlaying(false);
+        tl.setTime(0);
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+    window.parent?.postMessage('autopilot:showcase-ready', '*');
+    return () => window.removeEventListener('message', onMessage);
   }, [tl]);
   return null;
 }
@@ -35,7 +52,7 @@ function Scene() {
 function HeroVideo() {
   const { DURATION } = window.HERO_DATA;
   return (
-    <Stage width={1920} height={1080} duration={DURATION} loop={true} autoplay
+    <Stage width={1920} height={1080} duration={DURATION} loop={true} autoplay={false}
       background={GRAD} persistKey="autopilot-hero-embed">
       <Scene />
     </Stage>

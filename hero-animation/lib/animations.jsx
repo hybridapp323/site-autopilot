@@ -430,6 +430,45 @@ function Stage({
 
   const displayTime = hoverTime != null ? hoverTime : time;
 
+  React.useEffect(() => {
+    window.__seek = (t) => {
+      setPlaying(false);
+      setTime(clamp(t, 0, duration));
+    };
+    window.__reset = () => {
+      setPlaying(false);
+      setTime(0);
+    };
+    window.__play = () => {
+      setHoverTime(null);
+      setTime(0);
+      setPlaying(true);
+    };
+    window.__pause = () => setPlaying(false);
+
+    const onMessage = (event) => {
+      if (event.data === 'autopilot:showcase-play') {
+        setHoverTime(null);
+        setTime(0);
+        setPlaying(true);
+      }
+      if (event.data === 'autopilot:showcase-reset') {
+        setPlaying(false);
+        setTime(0);
+      }
+    };
+
+    window.addEventListener('message', onMessage);
+    window.parent?.postMessage('autopilot:showcase-ready', '*');
+    return () => {
+      window.removeEventListener('message', onMessage);
+      delete window.__seek;
+      delete window.__reset;
+      delete window.__play;
+      delete window.__pause;
+    };
+  }, [duration]);
+
   const ctxValue = React.useMemo(
     () => ({ time: displayTime, duration, playing, setTime, setPlaying }),
     [displayTime, duration, playing]
@@ -669,4 +708,3 @@ Object.assign(window, {
   TextSprite, ImageSprite, RectSprite,
   Stage, PlaybackBar,
 });
-

@@ -95,29 +95,205 @@ if (toggle && links) {
   });
 }
 
-// 6) Lazy-load heavy demo videos only when they are close to view
+// 6) Preload demo videos after page load, then play only when the full mockup is visible
 const lazyVideos = document.querySelectorAll('video[data-src]');
-if ('IntersectionObserver' in window) {
-  const videoIo = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const video = entry.target;
-      video.src = video.dataset.src;
-      video.removeAttribute('data-src');
-      video.load();
-      video.play().catch(() => {});
-      videoIo.unobserve(video);
-    });
-  }, { rootMargin: '600px 0px' });
-  lazyVideos.forEach((video) => videoIo.observe(video));
-} else {
-  lazyVideos.forEach((video) => {
-    video.src = video.dataset.src;
-    video.removeAttribute('data-src');
-  });
+function ensureVideoPoster(video) {
+  if (!video.poster || video.dataset.posterReady === 'true') return null;
+  const screen = video.closest('.mock-screen');
+  if (!screen) return null;
+
+  const poster = document.createElement('img');
+  poster.className = 'video-poster-overlay';
+  poster.src = video.poster;
+  poster.alt = '';
+  poster.decoding = 'async';
+  poster.setAttribute('aria-hidden', 'true');
+  screen.appendChild(poster);
+  video.dataset.posterReady = 'true';
+  return poster;
 }
 
-// 7) Calendly popup / badge widget
+function getVideoPoster(video) {
+  return video.closest('.mock-screen')?.querySelector('.video-poster-overlay') || null;
+}
+
+function prepareDemoVideo(video) {
+  if (video.dataset.preparing === 'true' || video.dataset.prepared === 'true') return;
+  video.dataset.preparing = 'true';
+  ensureVideoPoster(video);
+
+  video.preload = 'auto';
+  video.src = video.dataset.src;
+  video.load();
+
+  const markPrepared = () => {
+    video.dataset.prepared = 'true';
+    video.pause();
+    try { video.currentTime = 0; } catch (e) {}
+  };
+
+  if (video.readyState >= 2) markPrepared();
+  else video.addEventListener('loadeddata', markPrepared, { once: true });
+}
+
+function playDemoVideo(video) {
+  if (video.dataset.visiblePlaying === 'true') return;
+  video.dataset.visiblePlaying = 'true';
+  video.dataset.activated = 'true';
+  prepareDemoVideo(video);
+
+  const playFromBeginning = () => {
+    try { video.currentTime = 0; } catch (e) {}
+    video.play().then(() => {
+      getVideoPoster(video)?.classList.add('is-hidden');
+    }).catch(() => {});
+  };
+
+  video.removeAttribute('data-src');
+
+  if (video.readyState >= 2) playFromBeginning();
+  else video.addEventListener('loadeddata', playFromBeginning, { once: true });
+}
+
+function resetDemoVideo(video) {
+  if (video.dataset.visiblePlaying !== 'true' && video.currentTime === 0) return;
+  video.dataset.visiblePlaying = 'false';
+  video.pause();
+  try { video.currentTime = 0; } catch (e) {}
+}
+
+function isDemoMockReadyToPlay(mock) {
+  const rect = mock.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+  const verticalTolerance = 2;
+  const horizontalTolerance = 2;
+
+  const horizontallyVisible =
+    rect.left >= -horizontalTolerance &&
+    rect.right <= viewportWidth + horizontalTolerance;
+
+  if (!horizontallyVisible) return false;
+
+  if (rect.height <= viewportHeight) {
+    return rect.top >= -verticalTolerance && rect.bottom <= viewportHeight + verticalTolerance;
+  }
+
+  return rect.top <= verticalTolerance && rect.bottom >= viewportHeight - verticalTolerance;
+}
+
+function scheduleDemoVideoPreload() {
+  lazyVideos.forEach(prepareDemoVideo);
+}
+
+if ('requestIdleCallback' in window) {
+  window.addEventListener('load', () => requestIdleCallback(scheduleDemoVideoPreload, { timeout: 1600 }), { once: true });
+} else {
+  window.addEventListener('load', () => window.setTimeout(scheduleDemoVideoPreload, 700), { once: true });
+}
+
+if ('IntersectionObserver' in window) {
+  const videosByMock = new WeakMap();
+  const videoIo = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const video = videosByMock.get(entry.target);
+      if (!video) return;
+      if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
+        playDemoVideo(video);
+      } else {
+        resetDemoVideo(video);
+      }
+    });
+  }, { threshold: [0, 0.25, 0.5, 0.75, 0.99, 1], rootMargin: '0px' });
+
+  lazyVideos.forEach((video) => {
+    const mock = video.closest('.mock') || video;
+    videosByMock.set(mock, video);
+    videoIo.observe(mock);
+  });
+} else {
+  lazyVideos.forEach(playDemoVideo);
+}
+
+// 7) Hero iframe showcase follows the same play/reset visibility rules
+const iframeShowcases = document.querySelectorAll('.mock-iframe');
+const iframeStates = new WeakMap();
+
+function postIframeShowcaseCommand(iframe, command) {
+  const target = iframe.contentWindow;
+  if (!target) return;
+
+  try {
+    if (command === 'autopilot:showcase-play' && typeof target.__reset === 'function' && typeof target.__play === 'function') {
+      target.__reset();
+      target.__play();
+      return;
+    }
+    if (command === 'autopilot:showcase-reset' && typeof target.__reset === 'function') {
+      target.__reset();
+      return;
+    }
+  } catch (e) {}
+
+  target.postMessage(command, '*');
+}
+
+function playIframeShowcase(iframe) {
+  if (iframeStates.get(iframe) === 'playing') return;
+  iframeStates.set(iframe, 'playing');
+  postIframeShowcaseCommand(iframe, 'autopilot:showcase-play');
+}
+
+function resetIframeShowcase(iframe, force = false) {
+  if (!force && iframeStates.get(iframe) === 'reset') return;
+  iframeStates.set(iframe, 'reset');
+  postIframeShowcaseCommand(iframe, 'autopilot:showcase-reset');
+}
+
+function syncIframeShowcase(mock, iframe) {
+  if (isDemoMockReadyToPlay(mock)) playIframeShowcase(iframe);
+  else resetIframeShowcase(iframe);
+}
+
+if ('IntersectionObserver' in window) {
+  const iframesByMock = new WeakMap();
+  const iframeMocks = new WeakMap();
+  const iframeIo = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const iframe = iframesByMock.get(entry.target);
+      if (!iframe) return;
+      if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
+        playIframeShowcase(iframe);
+      } else {
+        resetIframeShowcase(iframe);
+      }
+    });
+  }, { threshold: [0, 0.25, 0.5, 0.75, 0.99, 1], rootMargin: '0px' });
+
+  iframeShowcases.forEach((iframe) => {
+    const mock = iframe.closest('.mock') || iframe;
+    iframesByMock.set(mock, iframe);
+    iframeMocks.set(iframe, mock);
+    iframe.addEventListener('load', () => {
+      resetIframeShowcase(iframe, true);
+      syncIframeShowcase(mock, iframe);
+    });
+    iframeIo.observe(mock);
+  });
+
+  window.addEventListener('message', (event) => {
+    if (event.data !== 'autopilot:showcase-ready') return;
+    const iframe = Array.from(iframeShowcases).find((frame) => frame.contentWindow === event.source);
+    if (!iframe) return;
+    const mock = iframeMocks.get(iframe) || iframe.closest('.mock') || iframe;
+    resetIframeShowcase(iframe, true);
+    syncIframeShowcase(mock, iframe);
+  });
+} else {
+  iframeShowcases.forEach(playIframeShowcase);
+}
+
+// 8) Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
 
