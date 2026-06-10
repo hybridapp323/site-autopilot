@@ -27,7 +27,7 @@
       <img src="assets/logo-autopilot.png" alt="" />
       <span>Auto<b>Pilot</b></span>
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="primary-navigation">
       <a href="#problema">O problema</a>
       <a href="#como-funciona">Como funciona</a>
       <a href="#recursos">Recursos</a>
@@ -41,7 +41,7 @@
       </button>
       <a href="#planos" class="btn btn-ghost cta-secondary">Ver planos</a>
       <a href="#cta" class="btn btn-primary" data-calendly-open>Agendar demo</a>
-      <button class="btn btn-ghost nav-toggle" aria-label="Menu">
+      <button class="btn btn-ghost nav-toggle" type="button" aria-label="Menu" aria-controls="primary-navigation" aria-expanded="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
@@ -180,7 +180,7 @@
     </p>
   </div>
 
-  <div class="hero-mock-wrap reveal" style="margin-top:clamp(44px,6vw,72px);">
+  <div class="hero-mock-wrap solution-demo reveal">
     <div class="mock">
       <div class="mock-bar">
         <div class="mock-dots"><i></i><i></i><i></i></div>
@@ -190,7 +190,7 @@
         </div>
       </div>
       <div class="mock-screen">
-        <video class="mock-image" src="assets/showcase 2 autopilot.mp4" aria-label="Demonstração do AutoPilot CRM funcionando sem o vendedor" autoplay muted loop playsinline preload="metadata"></video>
+        <video class="mock-image" data-src="assets/showcase 2 autopilot.mp4" poster="assets/hero.png" aria-label="Demonstração do AutoPilot CRM funcionando sem o vendedor" autoplay muted loop playsinline preload="none"></video>
       </div>
     </div>
   </div>
@@ -242,7 +242,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/sessao-1-nenhum-lead-fica-sem-resposta.jpg" alt="Tela real do AutoPilot CRM com atendimento da IA e horário de resposta em destaque" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/sessao-1-nenhum-lead-fica-sem-resposta.jpg" alt="Tela real do AutoPilot CRM com atendimento da IA e horário de resposta em destaque" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/sessao-2-o-vendedor-que-so-fala.jpg" alt="Tela real do AutoPilot CRM qualificando lead antes da conversa com o vendedor" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/sessao-2-o-vendedor-que-so-fala.jpg" alt="Tela real do AutoPilot CRM qualificando lead antes da conversa com o vendedor" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>
@@ -274,7 +274,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/sessao-3-lead-sumiu.jpg" alt="Tela real do AutoPilot CRM retomando conversa com lead inativo" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/sessao-3-lead-sumiu.jpg" alt="Tela real do AutoPilot CRM retomando conversa com lead inativo" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>
@@ -290,7 +290,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/sessao-4-lead-veio-ao-carro-sem-sair-do-chat.jpg" alt="Tela real do AutoPilot CRM enviando fotos do carro no chat" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/sessao-4-lead-veio-ao-carro-sem-sair-do-chat.jpg" alt="Tela real do AutoPilot CRM enviando fotos do carro no chat" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>
@@ -307,7 +307,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/rotina-visibilidade.png" alt="Tela real do AutoPilot CRM com resumo de transferência para o vendedor" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/rotina-visibilidade.png" alt="Tela real do AutoPilot CRM com resumo de transferência para o vendedor" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>
@@ -323,7 +323,7 @@
     <div class="feature-mock reveal">
       <div class="mock">
         <div class="mock-bar"><div class="mock-dots"><i></i><i></i><i></i></div></div>
-        <div class="mock-screen"><img class="mock-image" src="assets/sessao-6-primeira-vez-dashboard.jpg" alt="Tela real do AutoPilot CRM com relatórios e métricas comerciais" loading="lazy" /></div>
+        <div class="mock-screen"><img class="mock-image" src="assets/sessao-6-primeira-vez-dashboard.jpg" alt="Tela real do AutoPilot CRM com relatórios e métricas comerciais" loading="lazy" decoding="async" /></div>
       </div>
     </div>
   </div>

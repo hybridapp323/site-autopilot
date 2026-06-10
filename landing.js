@@ -66,26 +66,58 @@ if (themeBtn) {
 // 5) Mobile nav toggle
 const toggle = document.querySelector('.nav-toggle');
 const links = document.querySelector('.nav-links');
-if (toggle) {
+if (toggle && links) {
+  const setMenuOpen = (open) => {
+    links.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+
   toggle.addEventListener('click', () => {
-    const open = links.style.display === 'flex';
-    links.style.display = open ? '' : 'flex';
-    links.style.position = 'absolute';
-    links.style.flexDirection = 'column';
-    links.style.top = '72px';
-    links.style.right = 'var(--gutter)';
-    links.style.background = 'hsl(var(--card))';
-    links.style.border = '1px solid hsl(var(--border))';
-    links.style.borderRadius = 'var(--radius)';
-    links.style.padding = '10px';
-    links.style.boxShadow = 'var(--shadow-lift)';
+    setMenuOpen(!links.classList.contains('open'));
   });
+
   links.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => { if (window.innerWidth <= 900) links.style.display = ''; })
+    a.addEventListener('click', () => setMenuOpen(false))
   );
+
+  document.addEventListener('click', (event) => {
+    if (!links.classList.contains('open')) return;
+    if (links.contains(event.target) || toggle.contains(event.target)) return;
+    setMenuOpen(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenuOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) setMenuOpen(false);
+  });
 }
 
-// 6) Calendly popup / badge widget
+// 6) Lazy-load heavy demo videos only when they are close to view
+const lazyVideos = document.querySelectorAll('video[data-src]');
+if ('IntersectionObserver' in window) {
+  const videoIo = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const video = entry.target;
+      video.src = video.dataset.src;
+      video.removeAttribute('data-src');
+      video.load();
+      video.play().catch(() => {});
+      videoIo.unobserve(video);
+    });
+  }, { rootMargin: '600px 0px' });
+  lazyVideos.forEach((video) => videoIo.observe(video));
+} else {
+  lazyVideos.forEach((video) => {
+    video.src = video.dataset.src;
+    video.removeAttribute('data-src');
+  });
+}
+
+// 7) Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
 
