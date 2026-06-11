@@ -63,36 +63,26 @@ if (themeBtn) {
   });
 }
 
-// 5) Mobile nav toggle
-const toggle = document.querySelector('.nav-toggle');
-const links = document.querySelector('.nav-links');
-if (toggle && links) {
-  const setMenuOpen = (open) => {
-    links.classList.toggle('open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-  };
-
-  toggle.addEventListener('click', () => {
-    setMenuOpen(!links.classList.contains('open'));
-  });
-
-  links.querySelectorAll('a').forEach((a) =>
-    a.addEventListener('click', () => setMenuOpen(false))
+// 5) Mobile nav: full-screen slide-in sheet
+const navToggle = document.getElementById('nav-toggle');
+const navScrim = document.getElementById('nav-scrim');
+const navMenu = document.getElementById('nav-menu');
+function closeMenu() {
+  document.body.classList.remove('menu-open');
+  if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+}
+function openMenu() {
+  document.body.classList.add('menu-open');
+  if (navToggle) navToggle.setAttribute('aria-expanded', 'true');
+}
+if (navToggle) {
+  navToggle.addEventListener('click', () =>
+    document.body.classList.contains('menu-open') ? closeMenu() : openMenu()
   );
-
-  document.addEventListener('click', (event) => {
-    if (!links.classList.contains('open')) return;
-    if (links.contains(event.target) || toggle.contains(event.target)) return;
-    setMenuOpen(false);
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setMenuOpen(false);
-  });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth >= 1024) setMenuOpen(false);
-  });
+  if (navScrim) navScrim.addEventListener('click', closeMenu);
+  if (navMenu) navMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+  window.addEventListener('resize', () => { if (window.innerWidth >= 1024) closeMenu(); });
 }
 
 // 6) Preload demo videos after page load, then play only when the full mockup is visible
@@ -339,7 +329,110 @@ function syncResponsiveShowcases() {
 
 showcaseMobileQuery.addEventListener?.('change', syncResponsiveShowcases);
 
-// 8) Calendly popup / badge widget
+// 8) Mobile feature explorer — tabbed, big screenshot one at a time
+(function buildMobileFeatures() {
+  const mount = document.getElementById('features-mobile');
+  if (!mount) return;
+  const rows = [...document.querySelectorAll('#recursos .feature-row')];
+  if (!rows.length) return;
+
+  const data = rows.map((row) => {
+    const ftag = row.querySelector('.ftag');
+    const planBadge = row.querySelector('.plan-badge');
+    const mock = row.querySelector('.feature-mock .mock');
+    const fnote = row.querySelector('.fnote');
+    return {
+      fiHTML: ftag ? ftag.querySelector('.fi').innerHTML : '',
+      label: ftag ? ftag.textContent.trim() : '',
+      planBadgeHTML: planBadge ? planBadge.outerHTML : '',
+      title: row.querySelector('.feature-copy h3').textContent,
+      para: row.querySelector('.feature-copy p').textContent,
+      fnote: fnote ? fnote.textContent : '',
+      mockHTML: mock ? mock.outerHTML : '',
+    };
+  });
+
+  const tabs = document.createElement('div');
+  tabs.className = 'fm-tabs';
+  tabs.setAttribute('role', 'tablist');
+  const stage = document.createElement('div');
+  stage.className = 'fm-stage';
+  const dots = document.createElement('div');
+  dots.className = 'fm-dots';
+
+  let active = 0;
+
+  function centerTab() {
+    const at = tabs.children[active];
+    if (!at) return;
+    tabs.scrollTo({ left: at.offsetLeft - (tabs.clientWidth - at.offsetWidth) / 2, behavior: 'smooth' });
+  }
+  function render() {
+    const d = data[active];
+    stage.innerHTML =
+      '<div class="fm-panel">' +
+      d.planBadgeHTML +
+      '<div class="fm-sub"><span class="fi">' + d.fiHTML + '</span>' + d.label + '</div>' +
+      '<h3>' + d.title + '</h3>' +
+      '<div class="fm-shot">' + d.mockHTML + '</div>' +
+      '<p>' + d.para + '</p>' +
+      (d.fnote ? '<div class="fnote">' + d.fnote + '</div>' : '') +
+      '</div>';
+    tabs.querySelectorAll('.fm-tab').forEach((t, i) => t.classList.toggle('active', i === active));
+    dots.querySelectorAll('button').forEach((b, i) => b.classList.toggle('active', i === active));
+  }
+  function go(i) {
+    active = Math.max(0, Math.min(data.length - 1, i));
+    render();
+    centerTab();
+  }
+
+  data.forEach((d, i) => {
+    const tab = document.createElement('button');
+    tab.type = 'button';
+    tab.className = 'fm-tab' + (i === 0 ? ' active' : '');
+    tab.innerHTML = '<span class="fm-tab-ic">' + d.fiHTML + '</span>' + d.label;
+    tab.addEventListener('click', () => go(i));
+    tabs.appendChild(tab);
+
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = i === 0 ? 'active' : '';
+    dot.setAttribute('aria-label', 'Recurso ' + (i + 1));
+    dot.addEventListener('click', () => go(i));
+    dots.appendChild(dot);
+  });
+
+  // swipe support
+  let sx = null;
+  stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', (e) => {
+    if (sx === null) return;
+    const dx = e.changedTouches[0].clientX - sx; sx = null;
+    if (Math.abs(dx) < 45) return;
+    go(active + (dx < 0 ? 1 : -1));
+  });
+
+  mount.append(tabs, stage, dots);
+  render();
+})();
+
+// 9) Sticky bottom CTA bar
+const mcta = document.getElementById('mobile-cta');
+const heroEl = document.querySelector('.hero');
+const ctaFinal = document.getElementById('cta');
+function updateCta() {
+  if (!mcta) return;
+  if (window.innerWidth >= 1024) { mcta.classList.remove('show'); return; }
+  const pastHero = window.scrollY > (heroEl ? heroEl.offsetHeight * 0.55 : 480);
+  const nearFinal = ctaFinal ? ctaFinal.getBoundingClientRect().top < window.innerHeight * 0.9 : false;
+  mcta.classList.toggle('show', pastHero && !nearFinal && !document.body.classList.contains('menu-open'));
+}
+window.addEventListener('scroll', updateCta, { passive: true });
+window.addEventListener('resize', updateCta);
+updateCta();
+
+// 10) Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
 

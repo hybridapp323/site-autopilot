@@ -27,12 +27,16 @@
       <img src="assets/logo-autopilot.png" alt="" />
       <span>Auto<b>Pilot</b></span>
     </a>
-    <div class="nav-links" id="primary-navigation">
+    <div class="nav-links" id="nav-menu">
       <a href="#problema">O problema</a>
       <a href="#como-funciona">Como funciona</a>
       <a href="#recursos">Recursos</a>
       <a href="#planos">Planos</a>
       <a href="#faq">FAQ</a>
+      <div class="nav-menu-cta">
+        <a href="#planos" class="btn btn-ghost">Ver planos</a>
+        <a href="#cta" class="btn btn-primary" data-calendly-open>Agendar demo</a>
+      </div>
     </div>
     <div class="nav-cta">
       <button class="theme-btn" id="theme-toggle" type="button" aria-label="Alternar tema claro/escuro" title="Alternar tema">
@@ -40,12 +44,13 @@
         <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></svg>
       </button>
       <a href="#planos" class="btn btn-ghost cta-secondary">Ver planos</a>
-      <a href="#cta" class="btn btn-primary" data-calendly-open>Agendar demo</a>
-      <button class="btn btn-ghost nav-toggle" type="button" aria-label="Menu" aria-controls="primary-navigation" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <a href="#cta" class="btn btn-primary cta-desktop" data-calendly-open>Agendar demo</a>
+      <button class="btn btn-ghost nav-toggle" id="nav-toggle" type="button" aria-label="Abrir menu" aria-controls="nav-menu" aria-expanded="false">
+        <span class="nav-toggle-bars"><i></i><i></i><i></i></span>
       </button>
     </div>
   </div>
+  <div class="nav-scrim" id="nav-scrim"></div>
 </nav>
 
 <main id="top">
@@ -231,6 +236,9 @@
     <span class="eyebrow reveal">Recursos</span>
     <h2 class="h2 reveal">Cada funcionalidade resolve um problema real da sua loja.</h2>
   </div>
+
+  <!-- MOBILE: explorador por abas (preenchido pelo landing.js a partir das linhas abaixo) -->
+  <div class="features-mobile reveal" id="features-mobile" aria-hidden="true"></div>
 
   <!-- Feature 1 -->
   <div class="feature-row">
@@ -487,6 +495,15 @@
     </div>
   </div>
 </footer>
+
+<!-- ===================== MOBILE STICKY CTA BAR ===================== -->
+<div class="mobile-cta" id="mobile-cta">
+  <div class="mobile-cta-text">
+    <strong>Demo gratuita de 30 min</strong>
+    <span>Sem compromisso · resposta em 24h</span>
+  </div>
+  <a href="#cta" class="btn btn-primary" data-calendly-open>Agendar demo</a>
+</div>
 
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 <script src="landing.js"></script>
