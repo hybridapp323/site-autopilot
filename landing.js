@@ -436,8 +436,21 @@ updateCta();
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
 
+function trackMetaLead(trigger) {
+  if (!trigger?.hasAttribute('data-meta-lead')) return;
+  if (typeof window.fbq !== 'function') return;
+
+  try {
+    window.fbq('track', 'Lead', {
+      content_name: trigger.textContent.trim().replace(/\s+/g, ' '),
+      page_variant: 'v2',
+    });
+  } catch (e) {}
+}
+
 function openCalendly(event) {
   if (event) event.preventDefault();
+  trackMetaLead(event?.currentTarget);
   if (window.location.protocol === 'file:') {
     window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
     return;
