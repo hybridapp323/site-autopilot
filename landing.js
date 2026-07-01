@@ -432,11 +432,22 @@ window.addEventListener('scroll', updateCta, { passive: true });
 window.addEventListener('resize', updateCta);
 updateCta();
 
-// 10) Calendly popup / badge widget
+// 10) Demo lead form + Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
+const DEMO_LEAD_ENDPOINT = 'https://kadbnljueppynlurwtir.supabase.co/functions/v1/site-demo-lead';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
+const demoModal = document.getElementById('demo-lead-modal');
+const demoForm = document.getElementById('demo-lead-form');
+const demoStepLabel = demoModal?.querySelector('[data-demo-step-label]');
+const demoStepCopy = demoModal?.querySelector('[data-demo-step-copy]');
+const demoNext = demoModal?.querySelector('[data-demo-next]');
+const demoBack = demoModal?.querySelector('[data-demo-back]');
+const demoSubmitStatus = demoModal?.querySelector('[data-demo-submit-status]');
+let demoStep = 1;
+let lastCalendlyTrigger = null;
+let lastFocusedBeforeDemo = null;
 
-function trackMetaLead(trigger) {
+function trackMetaLead(trigger, leadData = {}) {
   if (!trigger?.hasAttribute('data-meta-lead')) return;
   if (typeof window.fbq !== 'function') return;
 
@@ -444,27 +455,238 @@ function trackMetaLead(trigger) {
     window.fbq('track', 'Lead', {
       content_name: trigger.textContent.trim().replace(/\s+/g, ' '),
       page_variant: 'v2',
+      store_name: leadData.store || '',
+      monthly_sales: leadData.monthlySales || '',
+      salespeople: leadData.salespeople || '',
     });
   } catch (e) {}
 }
 
-function openCalendly(event) {
-  if (event) event.preventDefault();
-  trackMetaLead(event?.currentTarget);
+function buildCalendlyUrl(leadData = {}) {
+  const url = new URL(CALENDLY_URL);
+  if (leadData.name) url.searchParams.set('name', leadData.name);
+  if (leadData.email) url.searchParams.set('email', leadData.email);
+  return url.toString();
+}
+
+function launchCalendly(url = CALENDLY_URL) {
   if (window.location.protocol === 'file:') {
-    window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank', 'noopener,noreferrer');
     return;
   }
   if (window.Calendly?.initPopupWidget) {
-    window.Calendly.initPopupWidget({ url: CALENDLY_URL });
+    window.Calendly.initPopupWidget({ url });
   } else {
-    window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
+}
+
+function openCalendlyDirect(event) {
+  if (event) event.preventDefault();
+  trackMetaLead(event?.currentTarget);
+  launchCalendly(CALENDLY_URL);
+}
+
+function setDemoStatus(message = '', tone = 'neutral') {
+  if (!demoSubmitStatus) return;
+  demoSubmitStatus.textContent = message;
+  demoSubmitStatus.classList.toggle('is-visible', Boolean(message));
+  demoSubmitStatus.classList.toggle('is-error', tone === 'error');
+}
+
+function clearDemoErrors(options = {}) {
+  demoForm?.querySelectorAll('.field.is-invalid').forEach((field) => field.classList.remove('is-invalid'));
+  demoForm?.querySelectorAll('.field-error').forEach((error) => { error.textContent = ''; });
+  if (!options.keepStatus) setDemoStatus('');
+}
+
+function setDemoStep(step) {
+  demoStep = step;
+  demoModal?.querySelectorAll('[data-demo-step]').forEach((panel) => {
+    panel.classList.toggle('is-active', panel.dataset.demoStep === String(step));
+  });
+  demoModal?.querySelectorAll('[data-demo-progress]').forEach((bar) => {
+    const barStep = Number(bar.dataset.demoProgress);
+    bar.classList.toggle('is-active', barStep === step);
+    bar.classList.toggle('is-complete', barStep < step);
+  });
+  if (demoStepLabel) demoStepLabel.textContent = `Etapa ${step} de 2`;
+  if (demoStepCopy) {
+    demoStepCopy.textContent = step === 1
+      ? 'Antes de abrir a agenda, queremos entender quem vai ver o AutoPilot em a\u00e7\u00e3o.'
+      : 'Agora, conte um pouco sobre a opera\u00e7\u00e3o para prepararmos uma demo mais precisa.';
+  }
+  if (demoNext) demoNext.textContent = step === 1 ? 'Continuar' : 'Agendar demo';
+  if (demoBack) demoBack.classList.toggle('is-visible', step === 2);
+  clearDemoErrors();
+}
+
+function getDemoFieldsForStep(step) {
+  return Array.from(demoForm?.querySelectorAll(`[data-demo-step="${step}"] input`) || []);
+}
+
+function setFieldError(input, message) {
+  const field = input.closest('.field');
+  const error = demoForm?.querySelector(`[data-error-for="${input.name}"]`);
+  field?.classList.toggle('is-invalid', Boolean(message));
+  if (error) error.textContent = message || '';
+}
+
+function validateDemoStep(step) {
+  let firstInvalid = null;
+
+  getDemoFieldsForStep(step).forEach((input) => {
+    const value = input.value.trim();
+    let message = '';
+
+    if (!value) {
+      message = 'Preencha este campo.';
+    } else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      message = 'Informe um e-mail v\u00e1lido.';
+    } else if (input.name === 'phone' && value.replace(/\D/g, '').length < 10) {
+      message = 'Informe um telefone v\u00e1lido.';
+    } else if (input.type === 'number') {
+      const numericValue = Number(value);
+      const min = input.min === '' ? null : Number(input.min);
+      if (!Number.isFinite(numericValue) || (min !== null && numericValue < min)) {
+        message = input.name === 'salespeople' ? 'Informe pelo menos 1 vendedor.' : 'Informe uma quantidade v\u00e1lida.';
+      }
+    }
+
+    setFieldError(input, message);
+    if (message && !firstInvalid) firstInvalid = input;
+  });
+
+  if (firstInvalid) {
+    firstInvalid.focus();
+    return false;
+  }
+  return true;
+}
+
+function collectDemoLead() {
+  const data = new FormData(demoForm);
+  const instagram = String(data.get('instagram') || '').trim();
+  const params = new URLSearchParams(window.location.search);
+
+  return {
+    name: String(data.get('name') || '').trim(),
+    phone: String(data.get('phone') || '').trim(),
+    email: String(data.get('email') || '').trim(),
+    store: String(data.get('store') || '').trim(),
+    instagram: instagram && !instagram.startsWith('@') ? '@' + instagram : instagram,
+    monthlySales: String(data.get('monthlySales') || '').trim(),
+    salespeople: String(data.get('salespeople') || '').trim(),
+    website: String(data.get('website') || '').trim(),
+    capturedAt: new Date().toISOString(),
+    sourcePath: window.location.pathname,
+    sourceUrl: window.location.href,
+    referrer: document.referrer || '',
+    utmSource: params.get('utm_source') || '',
+    utmMedium: params.get('utm_medium') || '',
+    utmCampaign: params.get('utm_campaign') || '',
+    utmTerm: params.get('utm_term') || '',
+    utmContent: params.get('utm_content') || '',
+  };
+}
+
+function persistDemoLead(leadData) {
+  window.__apDemoLead = leadData;
+  try {
+    localStorage.setItem('ap-demo-lead', JSON.stringify(leadData));
+  } catch (e) {}
+  try {
+    window.dispatchEvent(new CustomEvent('autopilot:demoLeadReady', { detail: leadData }));
+  } catch (e) {}
+}
+
+function closeDemoForm(options = {}) {
+  if (!demoModal) return;
+  if (demoForm?.classList.contains('is-submitting') && !options.force) return;
+  demoModal.classList.remove('is-open');
+  demoModal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('demo-modal-open');
+  if (options.restoreFocus !== false) lastFocusedBeforeDemo?.focus?.();
+}
+
+function openDemoForm(event) {
+  if (!demoModal || !demoForm) {
+    openCalendlyDirect(event);
+    return;
+  }
+
+  if (event) event.preventDefault();
+  lastCalendlyTrigger = event?.currentTarget || null;
+  lastFocusedBeforeDemo = document.activeElement;
+  closeMenu();
+  setDemoStep(1);
+  demoModal.classList.add('is-open');
+  demoModal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('demo-modal-open');
+  window.setTimeout(() => getDemoFieldsForStep(1)[0]?.focus(), 80);
+}
+
+function formatPhoneInput(input) {
+  const digits = input.value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length <= 2) {
+    input.value = digits;
+  } else if (digits.length <= 6) {
+    input.value = `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  } else if (digits.length <= 10) {
+    input.value = `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  } else {
+    input.value = `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+}
+
+function setDemoSubmitting(isSubmitting) {
+  if (!demoForm) return;
+  demoForm.classList.toggle('is-submitting', isSubmitting);
+  demoForm.querySelectorAll('input, button').forEach((control) => {
+    control.disabled = isSubmitting;
+  });
+  if (demoNext) demoNext.textContent = isSubmitting ? 'Enviando...' : (demoStep === 1 ? 'Continuar' : 'Agendar demo');
+}
+
+async function submitDemoLead(leadData) {
+  const response = await fetch(DEMO_LEAD_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(leadData),
+  });
+  let result = null;
+
+  try {
+    result = await response.json();
+  } catch (e) {}
+
+  if (!response.ok || !result?.ok) {
+    const error = new Error(result?.error || 'server_error');
+    error.status = response.status;
+    error.fields = result?.fields || {};
+    throw error;
+  }
+
+  return result;
+}
+
+function applyServerFieldErrors(fields = {}) {
+  let firstInvalid = null;
+
+  Object.entries(fields).forEach(([name, message]) => {
+    const input = demoForm?.querySelector(`[name="${name}"]`);
+    if (!input) return;
+    setFieldError(input, message || 'Revise este campo.');
+    if (!firstInvalid) firstInvalid = input;
+  });
+
+  firstInvalid?.focus();
 }
 
 let calendlyBadgeInitialized = false;
 function initCalendlyBadge(attempt = 0) {
   if (calendlyBadgeInitialized) return;
+  if (demoModal) return;
   if (window.location.protocol === 'file:') return;
   if (!window.Calendly?.initBadgeWidget) {
     if (attempt < 40) window.setTimeout(() => initCalendlyBadge(attempt + 1), 250);
@@ -480,6 +702,49 @@ function initCalendlyBadge(attempt = 0) {
   });
 }
 
-calendlyOpeners.forEach((trigger) => trigger.addEventListener('click', openCalendly));
+if (demoModal && demoForm) {
+  demoModal.querySelectorAll('[data-demo-close]').forEach((trigger) => trigger.addEventListener('click', () => closeDemoForm()));
+  demoBack?.addEventListener('click', () => setDemoStep(1));
+  demoForm.querySelector('[name="phone"]')?.addEventListener('input', (event) => formatPhoneInput(event.currentTarget));
+  demoForm.querySelectorAll('input').forEach((input) => {
+    input.addEventListener('input', () => setFieldError(input, ''));
+  });
+  demoForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!validateDemoStep(demoStep)) return;
+    if (demoStep === 1) {
+      setDemoStep(2);
+      window.setTimeout(() => getDemoFieldsForStep(2)[0]?.focus(), 50);
+      return;
+    }
+
+    const leadData = collectDemoLead();
+    setDemoSubmitting(true);
+    setDemoStatus('Salvando seus dados...');
+
+    try {
+      const result = await submitDemoLead(leadData);
+      persistDemoLead({ ...leadData, leadId: result.leadId, webhookStatus: result.webhookStatus });
+      trackMetaLead(lastCalendlyTrigger, leadData);
+      closeDemoForm({ restoreFocus: false, force: true });
+      demoForm.reset();
+      setDemoStep(1);
+      launchCalendly(buildCalendlyUrl(leadData));
+    } catch (error) {
+      applyServerFieldErrors(error.fields);
+      const message = error.status === 429
+        ? 'Ja recebemos esta solicitacao. Tente novamente mais tarde.'
+        : 'Nao foi possivel salvar seus dados agora. Revise os campos e tente novamente.';
+      setDemoStatus(message, 'error');
+    } finally {
+      setDemoSubmitting(false);
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && demoModal.classList.contains('is-open')) closeDemoForm();
+  });
+}
+
+calendlyOpeners.forEach((trigger) => trigger.addEventListener('click', openDemoForm));
 if (document.readyState === 'complete') initCalendlyBadge();
 else window.addEventListener('load', () => initCalendlyBadge());

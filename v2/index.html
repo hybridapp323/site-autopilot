@@ -490,6 +490,89 @@
   </div>
 </footer>
 
+<div class="demo-modal" id="demo-lead-modal" aria-hidden="true">
+  <div class="demo-modal__backdrop" data-demo-close></div>
+  <section class="demo-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="demo-modal-title">
+    <button class="demo-modal__close" type="button" data-demo-close aria-label="Fechar formul&aacute;rio">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="demo-modal__head">
+      <span class="demo-modal__kicker" data-demo-step-label>Etapa 1 de 2</span>
+      <h2 id="demo-modal-title">Agende uma demo personalizada</h2>
+      <p data-demo-step-copy>Antes de abrir a agenda, queremos entender quem vai ver o AutoPilot em a&ccedil;&atilde;o.</p>
+    </div>
+
+    <div class="demo-progress" aria-hidden="true">
+      <span class="is-active" data-demo-progress="1"></span>
+      <span data-demo-progress="2"></span>
+    </div>
+
+    <form class="demo-form" id="demo-lead-form" novalidate>
+      <label class="demo-form__trap" aria-hidden="true">
+        <span>Website</span>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" />
+      </label>
+
+      <div class="demo-form__step is-active" data-demo-step="1">
+        <label class="field">
+          <span>Nome</span>
+          <input type="text" name="name" autocomplete="name" required placeholder="Seu nome" />
+          <small class="field-error" data-error-for="name"></small>
+        </label>
+
+        <label class="field">
+          <span>Telefone</span>
+          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="(00) 00000-0000" />
+          <small class="field-error" data-error-for="phone"></small>
+        </label>
+
+        <label class="field">
+          <span>E-mail</span>
+          <input type="email" name="email" autocomplete="email" required placeholder="voce@loja.com.br" />
+          <small class="field-error" data-error-for="email"></small>
+        </label>
+      </div>
+
+      <div class="demo-form__step" data-demo-step="2">
+        <label class="field">
+          <span>Nome da loja</span>
+          <input type="text" name="store" autocomplete="organization" required placeholder="Nome da loja" />
+          <small class="field-error" data-error-for="store"></small>
+        </label>
+
+        <label class="field">
+          <span>Instagram</span>
+          <input type="text" name="instagram" inputmode="text" required placeholder="@sualoja" />
+          <small class="field-error" data-error-for="instagram"></small>
+        </label>
+
+        <div class="demo-form__grid">
+          <label class="field">
+            <span>M&eacute;dia de vendas mensais</span>
+            <input type="number" name="monthlySales" inputmode="numeric" min="0" required placeholder="Ex: 45" />
+            <small class="field-error" data-error-for="monthlySales"></small>
+          </label>
+
+          <label class="field">
+            <span>Vendedores</span>
+            <input type="number" name="salespeople" inputmode="numeric" min="1" required placeholder="Ex: 6" />
+            <small class="field-error" data-error-for="salespeople"></small>
+          </label>
+        </div>
+      </div>
+
+      <div class="demo-form__actions">
+        <button class="btn btn-ghost demo-form__back" type="button" data-demo-back>Voltar</button>
+        <button class="btn btn-primary demo-form__next" type="submit" data-demo-next>Continuar</button>
+      </div>
+      <p class="demo-form__status" data-demo-submit-status role="status" aria-live="polite"></p>
+    </form>
+  </section>
+</div>
+
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
 <script src="../landing.js"></script>
 </body>
