@@ -166,24 +166,16 @@ function resetDemoVideo(video) {
   try { video.currentTime = 0; } catch (e) {}
 }
 
-function isDemoMockReadyToPlay(mock) {
+function isDemoMockInViewport(mock) {
   const rect = mock.getBoundingClientRect();
   const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
   const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-  const verticalTolerance = 2;
-  const horizontalTolerance = 2;
 
   const horizontallyVisible =
-    rect.left >= -horizontalTolerance &&
-    rect.right <= viewportWidth + horizontalTolerance;
+    rect.right > 0 &&
+    rect.left < viewportWidth;
 
-  if (!horizontallyVisible) return false;
-
-  if (rect.height <= viewportHeight) {
-    return rect.top >= -verticalTolerance && rect.bottom <= viewportHeight + verticalTolerance;
-  }
-
-  return rect.top <= verticalTolerance && rect.bottom >= viewportHeight - verticalTolerance;
+  return horizontallyVisible && rect.bottom > 0 && rect.top < viewportHeight;
 }
 
 function scheduleDemoVideoPreload() {
@@ -208,13 +200,13 @@ if ('IntersectionObserver' in window) {
         resetDemoVideo(video);
         return;
       }
-      if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
+      if (entry.isIntersecting && isDemoMockInViewport(entry.target)) {
         playDemoVideo(video);
       } else {
         resetDemoVideo(video);
       }
     });
-  }, { threshold: [0, 0.25, 0.5, 0.75, 0.99, 1], rootMargin: '0px' });
+  }, { threshold: 0, rootMargin: '0px' });
 
   lazyVideos.forEach((video) => {
     const mock = video.closest('.mock') || video;
@@ -228,6 +220,22 @@ if ('IntersectionObserver' in window) {
 // 7) Hero iframe showcase follows the same play/reset visibility rules
 const iframeShowcases = document.querySelectorAll('.mock-iframe');
 const iframeStates = new WeakMap();
+
+function ensureIframeShowcaseLoaded(iframe) {
+  if (iframe.dataset.loaded === 'true') return true;
+  if (iframe.getAttribute('src')) return true;
+  if (!iframe.dataset.src) return true;
+
+  iframe.src = iframe.dataset.src;
+  return false;
+}
+
+function unloadIframeShowcase(iframe) {
+  if (!iframe.dataset.src || !iframe.getAttribute('src')) return;
+  iframe.removeAttribute('src');
+  iframe.dataset.loaded = 'false';
+  iframeStates.set(iframe, 'reset');
+}
 
 function postIframeShowcaseCommand(iframe, command) {
   const target = iframe.contentWindow;
@@ -251,8 +259,10 @@ function postIframeShowcaseCommand(iframe, command) {
 function playIframeShowcase(iframe) {
   if (!isShowcaseDeviceEnabled(iframe)) {
     resetIframeShowcase(iframe, true);
+    unloadIframeShowcase(iframe);
     return;
   }
+  if (!ensureIframeShowcaseLoaded(iframe)) return;
   if (iframeStates.get(iframe) === 'playing') return;
   iframeStates.set(iframe, 'playing');
   postIframeShowcaseCommand(iframe, 'autopilot:showcase-play');
@@ -267,9 +277,10 @@ function resetIframeShowcase(iframe, force = false) {
 function syncIframeShowcase(mock, iframe) {
   if (!isShowcaseDeviceEnabled(iframe)) {
     resetIframeShowcase(iframe, true);
+    unloadIframeShowcase(iframe);
     return;
   }
-  if (isDemoMockReadyToPlay(mock)) playIframeShowcase(iframe);
+  if (isDemoMockInViewport(mock)) playIframeShowcase(iframe);
   else resetIframeShowcase(iframe);
 }
 
@@ -282,21 +293,24 @@ if ('IntersectionObserver' in window) {
       if (!iframe) return;
       if (!isShowcaseDeviceEnabled(iframe)) {
         resetIframeShowcase(iframe, true);
+        unloadIframeShowcase(iframe);
         return;
       }
-      if (entry.isIntersecting && isDemoMockReadyToPlay(entry.target)) {
+      if (entry.isIntersecting && isDemoMockInViewport(entry.target)) {
         playIframeShowcase(iframe);
       } else {
         resetIframeShowcase(iframe);
       }
     });
-  }, { threshold: [0, 0.25, 0.5, 0.75, 0.99, 1], rootMargin: '0px' });
+  }, { threshold: 0, rootMargin: '0px' });
 
   iframeShowcases.forEach((iframe) => {
     const mock = iframe.closest('.mock') || iframe;
     iframesByMock.set(mock, iframe);
     iframeMocks.set(iframe, mock);
     iframe.addEventListener('load', () => {
+      if (!iframe.getAttribute('src')) return;
+      iframe.dataset.loaded = 'true';
       resetIframeShowcase(iframe, true);
       syncIframeShowcase(mock, iframe);
     });
