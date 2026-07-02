@@ -906,7 +906,36 @@ body.demo-modal-open { overflow: hidden; }
   gap: 14px;
 }
 
-.demo-form__step.is-active { display: grid; }
+.demo-form__step.is-active {
+  display: grid;
+  animation: demoStepIn var(--motion-slow) var(--motion-ease) both;
+}
+
+.demo-form__step.is-active.is-reversing {
+  animation-name: demoStepBackIn;
+}
+
+@keyframes demoStepIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes demoStepBackIn {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 .demo-form__grid {
   display: grid;

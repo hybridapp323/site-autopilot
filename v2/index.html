@@ -525,13 +525,13 @@
 
         <label class="field">
           <span>Telefone</span>
-          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="(00) 00000-0000" />
+          <input type="tel" name="phone" autocomplete="tel" inputmode="numeric" maxlength="15" required placeholder="(00) 00000-0000" />
           <small class="field-error" data-error-for="phone"></small>
         </label>
 
         <label class="field">
           <span>E-mail</span>
-          <input type="email" name="email" autocomplete="email" required placeholder="voce@loja.com.br" />
+          <input type="email" name="email" autocomplete="email" maxlength="254" required placeholder="voce@loja.com.br" />
           <small class="field-error" data-error-for="email"></small>
         </label>
       </div>

@@ -501,9 +501,12 @@ function clearDemoErrors(options = {}) {
 }
 
 function setDemoStep(step) {
+  const previousStep = demoStep;
   demoStep = step;
   demoModal?.querySelectorAll('[data-demo-step]').forEach((panel) => {
-    panel.classList.toggle('is-active', panel.dataset.demoStep === String(step));
+    const isActive = panel.dataset.demoStep === String(step);
+    panel.classList.toggle('is-active', isActive);
+    panel.classList.toggle('is-reversing', isActive && step < previousStep);
   });
   demoModal?.querySelectorAll('[data-demo-progress]').forEach((bar) => {
     const barStep = Number(bar.dataset.demoProgress);
@@ -541,10 +544,10 @@ function validateDemoStep(step) {
 
     if (!value) {
       message = 'Preencha este campo.';
-    } else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    } else if (input.type === 'email' && !isValidEmail(value)) {
       message = 'Informe um e-mail v\u00e1lido.';
-    } else if (input.name === 'phone' && value.replace(/\D/g, '').length < 10) {
-      message = 'Informe um telefone v\u00e1lido.';
+    } else if (input.name === 'phone' && value.replace(/\D/g, '').length !== 11) {
+      message = 'Informe um telefone com DDD e 11 n\u00fameros.';
     } else if (input.type === 'number') {
       const numericValue = Number(value);
       const min = input.min === '' ? null : Number(input.min);
@@ -562,6 +565,11 @@ function validateDemoStep(step) {
     return false;
   }
   return true;
+}
+
+function isValidEmail(value) {
+  const email = value.trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 }
 
 function collectDemoLead() {
@@ -639,6 +647,10 @@ function formatPhoneInput(input) {
   }
 }
 
+function normalizeEmailInput(input) {
+  input.value = input.value.trim().toLowerCase();
+}
+
 function setDemoSubmitting(isSubmitting) {
   if (!demoForm) return;
   demoForm.classList.toggle('is-submitting', isSubmitting);
@@ -706,6 +718,7 @@ if (demoModal && demoForm) {
   demoModal.querySelectorAll('[data-demo-close]').forEach((trigger) => trigger.addEventListener('click', () => closeDemoForm()));
   demoBack?.addEventListener('click', () => setDemoStep(1));
   demoForm.querySelector('[name="phone"]')?.addEventListener('input', (event) => formatPhoneInput(event.currentTarget));
+  demoForm.querySelector('[name="email"]')?.addEventListener('blur', (event) => normalizeEmailInput(event.currentTarget));
   demoForm.querySelectorAll('input').forEach((input) => {
     input.addEventListener('input', () => setFieldError(input, ''));
   });

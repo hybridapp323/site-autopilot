@@ -143,7 +143,7 @@ function validateLead(lead: NormalizedLead) {
   const fields: Record<string, string> = {};
 
   if (lead.name.length < 2) fields.name = "Informe seu nome.";
-  if (lead.phoneDigits.length < 10 || lead.phoneDigits.length > 13) fields.phone = "Informe um telefone valido.";
+  if (lead.phoneDigits.length !== 11) fields.phone = "Informe um telefone com DDD e 11 numeros.";
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) fields.email = "Informe um e-mail valido.";
   if (lead.store.length < 2) fields.store = "Informe o nome da loja.";
   if (lead.instagram.length < 2) fields.instagram = "Informe o Instagram da loja.";
