@@ -64,9 +64,9 @@ if (themeBtn) {
 }
 
 // 5) Mobile nav: full-screen slide-in sheet
-const navToggle = document.getElementById('nav-toggle');
+const navToggle = document.getElementById('nav-toggle') || document.querySelector('.nav-toggle');
 const navScrim = document.getElementById('nav-scrim');
-const navMenu = document.getElementById('nav-menu');
+const navMenu = document.getElementById(navToggle?.getAttribute('aria-controls')) || document.getElementById('nav-menu');
 function closeMenu() {
   document.body.classList.remove('menu-open');
   if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
@@ -85,7 +85,45 @@ if (navToggle) {
   window.addEventListener('resize', () => { if (window.innerWidth >= 1024) closeMenu(); });
 }
 
-// 6) Preload demo videos after page load, then play only when the full mockup is visible
+// 6) Header journey accordion
+const navJourney = document.querySelector('[data-nav-journey]');
+const navJourneyToggle = navJourney?.querySelector('[data-nav-journey-toggle]');
+const navJourneyPanel = navJourney?.querySelector('[data-nav-journey-panel]');
+
+function closeNavJourney() {
+  if (!navJourney || !navJourneyToggle || !navJourneyPanel) return;
+  navJourney.classList.remove('open');
+  navJourneyToggle.setAttribute('aria-expanded', 'false');
+  navJourneyPanel.setAttribute('aria-hidden', 'true');
+}
+
+function openNavJourney() {
+  if (!navJourney || !navJourneyToggle || !navJourneyPanel) return;
+  closeMenu();
+  navJourney.classList.add('open');
+  navJourneyToggle.setAttribute('aria-expanded', 'true');
+  navJourneyPanel.setAttribute('aria-hidden', 'false');
+}
+
+if (navJourney && navJourneyToggle && navJourneyPanel) {
+  navJourneyToggle.addEventListener('click', () => {
+    navJourney.classList.contains('open') ? closeNavJourney() : openNavJourney();
+  });
+  navJourneyPanel.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeNavJourney);
+  });
+  document.addEventListener('click', (event) => {
+    if (!navJourney.classList.contains('open')) return;
+    if (navJourney.contains(event.target)) return;
+    closeNavJourney();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeNavJourney();
+  });
+  window.addEventListener('resize', closeNavJourney);
+}
+
+// 7) Preload demo videos after page load, then play only when the full mockup is visible
 const lazyVideos = document.querySelectorAll('video[data-src]');
 const showcaseMobileQuery = window.matchMedia('(max-width: 1023px)');
 
@@ -217,7 +255,7 @@ if ('IntersectionObserver' in window) {
   lazyVideos.forEach(playDemoVideo);
 }
 
-// 7) Hero iframe showcase follows the same play/reset visibility rules
+// 8) Hero iframe showcase follows the same play/reset visibility rules
 const iframeShowcases = document.querySelectorAll('.mock-iframe');
 const iframeStates = new WeakMap();
 
@@ -343,7 +381,7 @@ function syncResponsiveShowcases() {
 
 showcaseMobileQuery.addEventListener?.('change', syncResponsiveShowcases);
 
-// 8) Mobile feature explorer — tabbed, big screenshot one at a time
+// 9) Mobile feature explorer — tabbed, big screenshot one at a time
 (function buildMobileFeatures() {
   const mount = document.getElementById('features-mobile');
   if (!mount) return;
@@ -431,7 +469,7 @@ showcaseMobileQuery.addEventListener?.('change', syncResponsiveShowcases);
   render();
 })();
 
-// 9) Sticky bottom CTA bar
+// 10) Sticky bottom CTA bar
 const mcta = document.getElementById('mobile-cta');
 const heroEl = document.querySelector('.hero');
 const ctaFinal = document.getElementById('cta');
@@ -446,7 +484,7 @@ window.addEventListener('scroll', updateCta, { passive: true });
 window.addEventListener('resize', updateCta);
 updateCta();
 
-// 10) Demo lead form + Calendly popup / badge widget
+// 11) Demo lead form + Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
 const DEMO_LEAD_ENDPOINT = 'https://kadbnljueppynlurwtir.supabase.co/functions/v1/site-demo-lead';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
