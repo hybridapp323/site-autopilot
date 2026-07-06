@@ -486,7 +486,8 @@ updateCta();
 
 // 11) Demo lead form + Calendly popup / badge widget
 const CALENDLY_URL = 'https://calendly.com/visionadsltda/nova-reuniao';
-const DEMO_LEAD_ENDPOINT = 'https://kadbnljueppynlurwtir.supabase.co/functions/v1/site-demo-lead';
+const DEMO_LEAD_ENDPOINT = 'https://anwejdokgnfwqykszowz.supabase.co/functions/v1/site-demo-lead';
+const META_LEAD_ENDPOINT = 'https://kadbnljueppynlurwtir.supabase.co/functions/v1/site-meta-lead-event';
 const calendlyOpeners = document.querySelectorAll('[data-calendly-open]');
 const demoModal = document.getElementById('demo-lead-modal');
 const demoForm = document.getElementById('demo-lead-form');
@@ -499,18 +500,48 @@ let demoStep = 1;
 let lastCalendlyTrigger = null;
 let lastFocusedBeforeDemo = null;
 
-function trackMetaLead(trigger, leadData = {}) {
-  if (!trigger?.hasAttribute('data-meta-lead')) return;
+function getCookieValue(name) {
+  try {
+    return document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(name + '='))
+      ?.split('=')
+      .slice(1)
+      .join('=') || '';
+  } catch (e) {
+    return '';
+  }
+}
+
+function getMetaFbc() {
+  const existing = getCookieValue('_fbc');
+  if (existing) return existing;
+
+  try {
+    const fbclid = new URLSearchParams(window.location.search).get('fbclid');
+    if (!fbclid) return '';
+    return `fb.1.${Date.now()}.${fbclid}`;
+  } catch (e) {
+    return '';
+  }
+}
+
+function createMetaEventId() {
+  if (window.crypto?.randomUUID) return `site_demo_${window.crypto.randomUUID()}`;
+  return `site_demo_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+}
+
+function trackMetaLead(trigger, leadData = {}, eventId = '') {
   if (typeof window.fbq !== 'function') return;
 
   try {
     window.fbq('track', 'Lead', {
-      content_name: trigger.textContent.trim().replace(/\s+/g, ' '),
+      content_name: trigger?.textContent?.trim().replace(/\s+/g, ' ') || 'Demo AutoPilot CRM',
       page_variant: 'v2',
       store_name: leadData.store || '',
       monthly_sales: leadData.monthlySales || '',
       salespeople: leadData.salespeople || '',
-    });
+    }, eventId ? { eventID: eventId } : undefined);
   } catch (e) {}
 }
 
@@ -734,6 +765,32 @@ async function submitDemoLead(leadData) {
   return result;
 }
 
+async function sendMetaLeadEvent(leadData, result = {}, eventId = createMetaEventId()) {
+  const payload = {
+    eventId,
+    leadId: result.leadId || leadData.leadId || '',
+    sourceUrl: leadData.sourceUrl || window.location.href,
+    fbp: getCookieValue('_fbp'),
+    fbc: getMetaFbc(),
+    contentName: lastCalendlyTrigger?.textContent?.trim().replace(/\s+/g, ' ') || 'Demo AutoPilot CRM',
+    pageVariant: 'v2',
+    lead: leadData,
+  };
+
+  const response = await fetch(META_LEAD_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    keepalive: true,
+  });
+
+  try {
+    return await response.json();
+  } catch (e) {
+    return { ok: response.ok, metaStatus: response.ok ? 'sent' : 'failed' };
+  }
+}
+
 function applyServerFieldErrors(fields = {}) {
   let firstInvalid = null;
 
@@ -789,8 +846,16 @@ if (demoModal && demoForm) {
 
     try {
       const result = await submitDemoLead(leadData);
-      persistDemoLead({ ...leadData, leadId: result.leadId, webhookStatus: result.webhookStatus });
-      trackMetaLead(lastCalendlyTrigger, leadData);
+      const metaEventId = createMetaEventId();
+      persistDemoLead({ ...leadData, leadId: result.leadId, webhookStatus: result.webhookStatus, metaEventId });
+      trackMetaLead(lastCalendlyTrigger, leadData, metaEventId);
+      sendMetaLeadEvent(leadData, result, metaEventId)
+        .then((metaResult) => {
+          if (metaResult?.metaStatus) {
+            window.__apDemoLeadMetaStatus = metaResult.metaStatus;
+          }
+        })
+        .catch(() => {});
       closeDemoForm({ restoreFocus: false, force: true });
       demoForm.reset();
       setDemoStep(1);
